@@ -46,7 +46,7 @@ local function AddTooltipToButton(buttonFrame, message)
     end
     if not buttonFrame:IsEnabled() then
         if not buttonFrame.invisibleTooltipButton then
-            buttonFrame.invisibleTooltipButton = createInvisibleButton(itemButton)
+            buttonFrame.invisibleTooltipButton = createInvisibleButton(buttonFrame)
         else
             buttonFrame.invisibleTooltipButton:Show()
         end
