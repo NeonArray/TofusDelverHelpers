@@ -10,3 +10,7 @@ Buttons:
 Currency:
 - [Undercoins](https://www.wowhead.com/currency=2803/undercoin)
 - [Restored Coffer Keys](https://www.wowhead.com/currency=3028/restored-coffer-key)
+
+--- 
+
+Special thanks to: Ren, Tysh, Kam and Oz of The Wandering Inn

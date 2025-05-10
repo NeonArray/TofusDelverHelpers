@@ -1,5 +1,9 @@
 # Tofu's Delver Helpers
 
+## v1.2.1
+
+- Fix: Add events for updating currencies
+
 ## v1.2.0
 
 - Feat: Add currency tracking

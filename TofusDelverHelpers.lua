@@ -225,6 +225,15 @@ local function cofferKeysDisplay()
     text:SetJustifyH("RIGHT")
     text:SetTextColor(1, 1, 1, 1)
 
+    item:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+
+    item:SetScript("OnEvent", function (currencyType, quantity, _, _, _)
+        if currencyType ~= Constants.COFFER_KEY then
+            return
+        end
+        text:SetText(tostring(quantity))
+    end)
+
     return item
 end
 
@@ -263,6 +272,15 @@ local function undercoinDisplay()
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
     text:SetJustifyH("RIGHT")
     text:SetTextColor(1, 1, 1, 1)
+
+    item:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+
+    item:SetScript("OnEvent", function (currencyType, quantity, _, _, _)
+        if currencyType ~= Constants.UNDERCOIN then
+            return
+        end
+        text:SetText(tostring(quantity))
+    end)
 
     return item
 end
