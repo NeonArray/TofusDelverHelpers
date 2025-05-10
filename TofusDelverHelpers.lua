@@ -3,6 +3,7 @@ local Constants = {
     DELVERS_BOUNTY_MAP = 233071,
     WAVE_SCRAMBLER_2000 = 233186,
     DELVE_O_BOT_7001 = 230850,
+    COFFER_KEY = 3028,
 
     DELVERS_BOUNTY_QUEST_ID = 86371,
 
@@ -26,11 +27,13 @@ end
 --- Set the tooltip content for a button frame.
 ---
 --- @param buttonFrame table
---- @param message string
-local function setTooltipForButton(buttonFrame, message)
+--- @param header string
+--- @param body string
+local function setTooltipForButton(buttonFrame, header, body)
     buttonFrame:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText(message)
+        GameTooltip:SetText(header, 1, 0.82, 0)
+        GameTooltip:AddLine(body, 1, 1, 1, true)
         GameTooltip:Show()
     end)
     buttonFrame:SetScript("OnLeave", GameTooltip_Hide)
@@ -39,9 +42,10 @@ end
 --- Add a tooltip to a button frame.
 ---
 --- @param buttonFrame table
---- @param message string
-local function AddTooltipToButton(buttonFrame, message)
-    if type(buttonFrame) ~= "table" or type(message) ~= "string" then
+--- @param header string
+--- @param body string
+local function addTooltipToButton(buttonFrame, header, body)
+    if type(buttonFrame) ~= "table" or type(header) ~= "string"  or type(body) ~= "string" then
         return
     end
     if not buttonFrame:IsEnabled() then
@@ -50,9 +54,9 @@ local function AddTooltipToButton(buttonFrame, message)
         else
             buttonFrame.invisibleTooltipButton:Show()
         end
-        setTooltipForButton(buttonFrame.invisibleTooltipButton, message)
+        setTooltipForButton(buttonFrame.invisibleTooltipButton, header, body)
     else
-        setTooltipForButton(buttonFrame, message)
+        setTooltipForButton(buttonFrame, header, body)
         if buttonFrame.invisibleTooltipButton then
             buttonFrame.invisibleTooltipButton:Hide()
         end
@@ -62,9 +66,14 @@ end
 ---
 --- Add Button for the Delvers Bounty Map
 ---
-local function DelversBountyButton()
+local function delversBountyButton()
     local itemCount = GetItemCount(Constants.DELVERS_BOUNTY_MAP)
-    local itemButton = CreateFrame("Button", addonName .. "DelversBountyButton", DelvesDashboardFrame, "SecureActionButtonTemplate")
+    local itemButton = CreateFrame(
+            "Button",
+            addonName .. "DelversBountyButton",
+            DelvesDashboardFrame,
+            "SecureActionButtonTemplate"
+    )
     itemButton:SetAttribute("type", "item")
     itemButton:SetAttribute("item", Constants.DELVERS_BOUNTY_MAP)
     itemButton:SetSize(Constants.BUTTON_SIZE, Constants.BUTTON_SIZE)
@@ -94,15 +103,20 @@ local function DelversBountyButton()
     end
 
     local message = "You have " .. (done and "" or "not ") .. "used your delvers bounty map this week."
-    AddTooltipToButton(itemButton, message)
+    addTooltipToButton(itemButton, "Delvers Bounty", message)
 end
 
 ---
 --- Add Button for the Wave Scrambler 2000
 ---
-local function ScramblerButton()
+local function scramblerButton()
     local itemCount = GetItemCount(Constants.WAVE_SCRAMBLER_2000)
-    local itemButton = CreateFrame("Button", addonName .. "ScramblerButton", DelvesDashboardFrame, "SecureActionButtonTemplate")
+    local itemButton = CreateFrame(
+            "Button",
+            addonName .. "ScramblerButton",
+            DelvesDashboardFrame,
+            "SecureActionButtonTemplate"
+    )
     itemButton:SetAttribute("type", "item")
     itemButton:SetAttribute("item", Constants.WAVE_SCRAMBLER_2000)
     itemButton:SetSize(Constants.BUTTON_SIZE, Constants.BUTTON_SIZE)
@@ -119,21 +133,26 @@ local function ScramblerButton()
         icon:SetDesaturated(false)
     end
 
-    AddTooltipToButton(itemButton, "Wave Scrambler 2000")
+    addTooltipToButton(itemButton, "Wave Scrambler 2000", "Use this to summon the Underpin in a bountiful delve to guarantee a delver's bounty.")
 end
 
 
 ---
 --- Add Button for the Delve-O-Bot toy
 ---
-local function DelveBotButton()
+local function delveBotButton()
     local _, _, iconTexture = C_ToyBox.GetToyInfo(Constants.DELVE_O_BOT_7001)
 
     if not PlayerHasToy(Constants.DELVE_O_BOT_7001) then
         return
     end
 
-    local itemButton = CreateFrame("Button", addonName .. "DelveBotButton", DelvesDashboardFrame, "SecureActionButtonTemplate")
+    local itemButton = CreateFrame(
+            "Button",
+            addonName .. "DelveBotButton",
+            DelvesDashboardFrame,
+            "SecureActionButtonTemplate"
+    )
     itemButton:SetAttribute("type", "toy")
     itemButton:SetAttribute("toy", Constants.DELVE_O_BOT_7001)
     itemButton:SetSize(Constants.BUTTON_SIZE, Constants.BUTTON_SIZE)
@@ -150,7 +169,31 @@ local function DelveBotButton()
     local start, duration = C_Container.GetItemCooldown(Constants.DELVE_O_BOT_7001)
     cooldown:SetCooldown(start, duration)
 
-    AddTooltipToButton(itemButton, "Delve-O-Bot 7001. Fly to the next bountiful delve.")
+    addTooltipToButton(itemButton, "Delve-O-Bot 7001", "Fly to the next bountiful delve.")
+end
+
+
+---
+--- Display the number of coffer keys available.
+---
+local function cofferKeysDisplay()
+    local cofferKeysInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.COFFER_KEY)
+
+    if not cofferKeysInfo then return end
+
+    local count = cofferKeysInfo.quantity
+
+    local item = CreateFrame(
+            "Frame",
+            addonName .. "CofferKeys",
+            DelvesDashboardFrame
+    )
+    item:SetSize(200, 30)
+    item:SetPoint("BOTTOM", 0, 2)
+    local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    text:SetText(count .. " Coffer Keys Available")
+    text:SetPoint("CENTER", item, "CENTER", 0, 0)
+    text:SetTextColor(1, 1, 1, 1)
 end
 
 local f = CreateFrame("Frame")
@@ -159,11 +202,10 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(_, _, addon)
     if addon == "Blizzard_DelvesDashboardUI" then
         if DelvesDashboardFrame then
-            DelveBotButton()
-            ScramblerButton()
-            DelversBountyButton()
+            delveBotButton()
+            scramblerButton()
+            delversBountyButton()
+            cofferKeysDisplay()
         end
     end
 end)
-
-
