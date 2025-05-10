@@ -4,12 +4,25 @@ local Constants = {
     WAVE_SCRAMBLER_2000 = 233186,
     DELVE_O_BOT_7001 = 230850,
     COFFER_KEY = 3028,
+    UNDERCOIN = 2803,
 
     DELVERS_BOUNTY_QUEST_ID = 86371,
 
     BUTTON_X_AXIS_OFFSET = -20,
     BUTTON_SIZE = 40,
 }
+
+local function LayoutHorizontally(frames, startAnchor, spacing)
+    local anchor = startAnchor
+    for i, frame in ipairs(frames) do
+        frame:ClearAllPoints()
+        if i == 1 then
+            frame:SetPoint("LEFT", anchor, "LEFT", 0, 0)
+        else
+            frame:SetPoint("LEFT", frames[i-1], "RIGHT", spacing, 0)
+        end
+    end
+end
 
 --- Create an invisible button frame. This is useful for when a button
 --- is disabled but you still want a tooltip to appear in place.
@@ -188,12 +201,60 @@ local function cofferKeysDisplay()
             addonName .. "CofferKeys",
             DelvesDashboardFrame
     )
-    item:SetSize(200, 30)
-    item:SetPoint("BOTTOM", 0, 2)
+    item:SetSize(50, 30)
+    local keysIcon = CreateFrame(
+            "Frame",
+            addonName .. "CofferKeyIcon",
+            item
+    )
+    keysIcon:SetSize(12, 12)
+    keysIcon:SetPoint("RIGHT", item)
+
+    local keysTex = keysIcon:CreateTexture(nil, "OVERLAY")
+    keysTex:SetAllPoints()
+    keysTex:SetTexture(cofferKeysInfo.iconFileID)
+
     local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    text:SetText(count .. " Coffer Keys Available")
-    text:SetPoint("CENTER", item, "CENTER", 0, 0)
+    text:SetText(tostring(count))
+    text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
+    text:SetJustifyH("RIGHT")
     text:SetTextColor(1, 1, 1, 1)
+
+    return item
+end
+local function undercoinDisplay()
+    local undercoinInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.UNDERCOIN)
+
+    if not undercoinInfo then return end
+
+    local count = undercoinInfo.quantity
+
+    local item = CreateFrame(
+            "Frame",
+            addonName .. "Undercoin",
+            DelvesDashboardFrame
+    )
+    item:SetSize(50, 30)
+    --item:SetPoint("BOTTOMRIGHT", -20, 200)
+
+    local keysIcon = CreateFrame(
+            "Frame",
+            addonName .. "UndercoinIcon",
+            item
+    )
+    keysIcon:SetSize(12, 12)
+    keysIcon:SetPoint("RIGHT", item)
+
+    local keysTex = keysIcon:CreateTexture(nil, "OVERLAY")
+    keysTex:SetAllPoints()
+    keysTex:SetTexture(undercoinInfo.iconFileID)
+
+    local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+    text:SetText(tostring(99999))
+    text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
+    text:SetJustifyH("RIGHT")
+    text:SetTextColor(1, 1, 1, 1)
+    return item
 end
 
 local f = CreateFrame("Frame")
@@ -206,6 +267,11 @@ f:SetScript("OnEvent", function(_, _, addon)
             scramblerButton()
             delversBountyButton()
             cofferKeysDisplay()
+            local row = CreateFrame("Frame", nil, DelvesDashboardFrame)
+            row:SetSize(110, 30)
+            row:SetPoint("BOTTOM")
+            local frames = {cofferKeysDisplay(), undercoinDisplay()}
+            LayoutHorizontally(frames, row, 5)
         end
     end
 end)
