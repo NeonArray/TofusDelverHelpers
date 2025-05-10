@@ -1,7 +1,7 @@
 ## Interface: 110105
-## Version: 1.1.0
+## Version: 1.2.0
 ## Title: Tofu's Delver Helpers
-## Notes: This addon displays three buttons to the Delve UI panel, as well denoting whether this character has completed their weekly bounty.
+## Notes: This addon displays some helpful information as well as shortcuts to delve related items/toys.
 ## IconTexture: Interface\icons\ui_delves.blp
 ## Author: Tofu
 ## Category-enUS: User Interface

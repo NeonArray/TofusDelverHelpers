@@ -1,5 +1,9 @@
 # Tofu's Delver Helpers
 
+## v1.2.0
+
+- Feat: Add currency tracking
+
 ## v1.1.0
 
 - Feat: Display coffer keys
