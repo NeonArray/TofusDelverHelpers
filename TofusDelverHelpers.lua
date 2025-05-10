@@ -12,11 +12,12 @@ local Constants = {
     BUTTON_SIZE = 40,
 }
 
+--- Layout frames horizontally with spacing.
 ---
 --- @param frames
 --- @param startAnchor
 --- @param spacing
-local function LayoutHorizontally(frames, startAnchor, spacing)
+local function layoutHorizontally(frames, startAnchor, spacing)
     local anchor = startAnchor
     for i, frame in ipairs(frames) do
         frame:ClearAllPoints()
@@ -226,6 +227,11 @@ local function cofferKeysDisplay()
 
     return item
 end
+
+
+---
+--- Display undercoins
+---
 local function undercoinDisplay()
     local undercoinInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.UNDERCOIN)
 
@@ -257,8 +263,10 @@ local function undercoinDisplay()
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
     text:SetJustifyH("RIGHT")
     text:SetTextColor(1, 1, 1, 1)
+
     return item
 end
+
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
@@ -270,11 +278,13 @@ f:SetScript("OnEvent", function(_, _, addon)
             scramblerButton()
             delversBountyButton()
             cofferKeysDisplay()
+
             local row = CreateFrame("Frame", nil, DelvesDashboardFrame)
             row:SetSize(110, 30)
             row:SetPoint("BOTTOMRIGHT", -75, 2)
+
             local frames = {cofferKeysDisplay(), undercoinDisplay()}
-            LayoutHorizontally(frames, row, 5)
+            layoutHorizontally(frames, row, 5)
         end
     end
 end)
