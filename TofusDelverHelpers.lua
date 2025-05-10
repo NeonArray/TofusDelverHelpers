@@ -12,6 +12,10 @@ local Constants = {
     BUTTON_SIZE = 40,
 }
 
+---
+--- @param frames
+--- @param startAnchor
+--- @param spacing
 local function LayoutHorizontally(frames, startAnchor, spacing)
     local anchor = startAnchor
     for i, frame in ipairs(frames) do
@@ -235,7 +239,6 @@ local function undercoinDisplay()
             DelvesDashboardFrame
     )
     item:SetSize(50, 30)
-    --item:SetPoint("BOTTOMRIGHT", -20, 200)
 
     local keysIcon = CreateFrame(
             "Frame",
@@ -250,7 +253,7 @@ local function undercoinDisplay()
     keysTex:SetTexture(undercoinInfo.iconFileID)
 
     local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    text:SetText(tostring(99999))
+    text:SetText(tostring(count))
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
     text:SetJustifyH("RIGHT")
     text:SetTextColor(1, 1, 1, 1)
@@ -269,7 +272,7 @@ f:SetScript("OnEvent", function(_, _, addon)
             cofferKeysDisplay()
             local row = CreateFrame("Frame", nil, DelvesDashboardFrame)
             row:SetSize(110, 30)
-            row:SetPoint("BOTTOM")
+            row:SetPoint("BOTTOMRIGHT", -75, 2)
             local frames = {cofferKeysDisplay(), undercoinDisplay()}
             LayoutHorizontally(frames, row, 5)
         end
