@@ -1,25 +1,41 @@
-# Tofu's Delver Helpers
+# Changelog 
 
-## v1.2.2
+## [1.2.3] - 2025-05-12
+
+### Added
+
+- Feat: Changelog
+
+## [1.2.2] - 2025-05-12
+
+### Fixed
 
 - Fix: Adjust font size of coffer keys
 
-## v1.2.1
+## [1.2.1] - 2025-05-10
+
+### Fixed
 
 - Fix: Add events for updating currencies
 
-## v1.2.0
+## [1.2.0] - 2025-05-10
+
+### Added
 
 - Feat: Add currency tracking
 
-## v1.1.0
+## [1.1.0] - 2025-05-10
+
+### Added
 
 - Feat: Display coffer keys
 
-## v1.0.1
+## [1.0.1] - 2025-05-10
+
+### Fix
 
 - Fix: itemButton -> buttonFrame
 
-## v1.0.0
+## [1.0.0] - 2025-05-09
 
 - Initial release
