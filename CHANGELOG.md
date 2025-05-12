@@ -1,5 +1,9 @@
 # Tofu's Delver Helpers
 
+## v1.2.2
+
+- Fix: Adjust font size of coffer keys
+
 ## v1.2.1
 
 - Fix: Add events for updating currencies
