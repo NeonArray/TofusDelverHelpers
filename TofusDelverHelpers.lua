@@ -219,7 +219,7 @@ local function cofferKeysDisplay()
     keysTex:SetAllPoints()
     keysTex:SetTexture(cofferKeysInfo.iconFileID)
 
-    local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     text:SetText(tostring(count))
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
     text:SetJustifyH("RIGHT")
