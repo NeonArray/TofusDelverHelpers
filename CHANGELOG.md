@@ -1,5 +1,11 @@
 # Changelog 
 
+## [1.2.4] - 2025-05-15
+
+### Updated
+
+- Update: Modify language on bounty map tooltip
+
 ## [1.2.3] - 2025-05-12
 
 ### Added

@@ -113,14 +113,16 @@ local function delversBountyButton()
     checkmark:SetPoint("TOPRIGHT", itemButton, "BOTTOMRIGHT", 7, 7)
     checkmark:SetAtlas("common-icon-checkmark")
 
+
     local done = C_QuestLog.IsQuestFlaggedCompleted(Constants.DELVERS_BOUNTY_QUEST_ID)
+    C_QuestLog.IsQuestFlaggedCompleted(86371)
     if done then
         checkmark:Show()
     else
         checkmark:Hide()
     end
 
-    local message = "You have " .. (done and "" or "not ") .. "used your delvers bounty map this week."
+    local message = "You have " .. (done and "" or "not ") .. "recieved your delvers bounty map this week."
     addTooltipToButton(itemButton, "Delvers Bounty", message)
 end
 
