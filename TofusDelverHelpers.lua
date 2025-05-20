@@ -130,7 +130,7 @@ end
 --- Add Button for the Wave Scrambler 2000
 ---
 local function scramblerButton()
-    local itemCount = GetItemCount(Constants.WAVE_SCRAMBLER_2000)
+    local itemCount = C_Item.GetItemCount(Constants.WAVE_SCRAMBLER_2000)
     local itemButton = CreateFrame(
             "Button",
             addonName .. "ScramblerButton",
@@ -144,7 +144,7 @@ local function scramblerButton()
 
     local icon = itemButton:CreateTexture(nil, "BACKGROUND")
     icon:SetAllPoints()
-    icon:SetTexture(GetItemIcon(Constants.WAVE_SCRAMBLER_2000))
+    icon:SetTexture(C_Item.GetItemIconByID(Constants.WAVE_SCRAMBLER_2000))
 
     if itemCount == 0 then
         icon:SetDesaturated(true)

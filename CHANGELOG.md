@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.2.5] - 2025-05-18
+
+- Update: Replace deprecated globals with correct API equivalents
+
 ## [1.2.4] - 2025-05-15
 
 ### Updated
