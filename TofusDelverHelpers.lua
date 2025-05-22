@@ -1,202 +1,84 @@
-local addonName = ...
+local addonName, addon = ...
 local Constants = {
     DELVERS_BOUNTY_MAP = 233071,
     WAVE_SCRAMBLER_2000 = 233186,
     DELVE_O_BOT_7001 = 230850,
     COFFER_KEY = 3028,
     UNDERCOIN = 2803,
+    COFFER_KEY_SHARDS = 236096,
+    COFFER_KEY_SHARD_S2_ITEM = 236096,
 
     DELVERS_BOUNTY_QUEST_ID = 86371,
 
     BUTTON_X_AXIS_OFFSET = -20,
     BUTTON_SIZE = 40,
 }
-
---- Layout frames horizontally with spacing.
----
---- @param frames
---- @param startAnchor
---- @param spacing
-local function layoutHorizontally(frames, startAnchor, spacing)
-    local anchor = startAnchor
-    for i, frame in ipairs(frames) do
-        frame:ClearAllPoints()
-        if i == 1 then
-            frame:SetPoint("LEFT", anchor, "LEFT", 0, 0)
-        else
-            frame:SetPoint("LEFT", frames[i-1], "RIGHT", spacing, 0)
-        end
-    end
-end
-
---- Create an invisible button frame. This is useful for when a button
---- is disabled but you still want a tooltip to appear in place.
----
---- @param buttonFrame table
-local function createInvisibleButton(buttonFrame)
-    local invisibleButton = CreateFrame("Button", nil, buttonFrame)
-    invisibleButton:SetAllPoints(buttonFrame)
-    invisibleButton:SetFrameLevel(buttonFrame:GetFrameLevel() + 1)
-    invisibleButton:EnableMouse(true)
-    return invisibleButton
-end
-
-
---- Set the tooltip content for a button frame.
----
---- @param buttonFrame table
---- @param header string
---- @param body string
-local function setTooltipForButton(buttonFrame, header, body)
-    buttonFrame:SetScript("OnEnter", function(self)
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText(header, 1, 0.82, 0)
-        GameTooltip:AddLine(body, 1, 1, 1, true)
-        GameTooltip:Show()
-    end)
-    buttonFrame:SetScript("OnLeave", GameTooltip_Hide)
-end
-
---- Add a tooltip to a button frame.
----
---- @param buttonFrame table
---- @param header string
---- @param body string
-local function addTooltipToButton(buttonFrame, header, body)
-    if type(buttonFrame) ~= "table" or type(header) ~= "string"  or type(body) ~= "string" then
-        return
-    end
-    if not buttonFrame:IsEnabled() then
-        if not buttonFrame.invisibleTooltipButton then
-            buttonFrame.invisibleTooltipButton = createInvisibleButton(buttonFrame)
-        else
-            buttonFrame.invisibleTooltipButton:Show()
-        end
-        setTooltipForButton(buttonFrame.invisibleTooltipButton, header, body)
-    else
-        setTooltipForButton(buttonFrame, header, body)
-        if buttonFrame.invisibleTooltipButton then
-            buttonFrame.invisibleTooltipButton:Hide()
-        end
-    end
-end
+addon.Constants = Constants
+local Utils = addon.Utils
 
 ---
 --- Add Button for the Delvers Bounty Map
 ---
-local function delversBountyButton()
-    local itemCount = GetItemCount(Constants.DELVERS_BOUNTY_MAP)
-    local itemButton = CreateFrame(
-            "Button",
-            addonName .. "DelversBountyButton",
-            DelvesDashboardFrame,
-            "SecureActionButtonTemplate"
+local function DelversBountyButton()
+    local itemButton, _ = Utils:CreateItemButton(
+        "DelversBountyButton",
+        Constants.DELVERS_BOUNTY_MAP,
+        30,
+        function ()
+            return C_Item.GetItemCount(Constants.DELVERS_BOUNTY_MAP) == 0
+        end
     )
-    itemButton:SetAttribute("type", "item")
-    itemButton:SetAttribute("item", Constants.DELVERS_BOUNTY_MAP)
-    itemButton:SetSize(Constants.BUTTON_SIZE, Constants.BUTTON_SIZE)
-    itemButton:SetPoint("BOTTOMRIGHT", Constants.BUTTON_X_AXIS_OFFSET, 30)
-
-    local icon = itemButton:CreateTexture(nil, "BACKGROUND")
-    icon:SetAllPoints()
-    icon:SetTexture(GetItemIcon(Constants.DELVERS_BOUNTY_MAP))
-
-    if itemCount == 0 then
-        icon:SetDesaturated(true)
-        itemButton:Disable()
-    else
-        icon:SetDesaturated(false)
-    end
-
-    local checkmark = itemButton:CreateTexture(nil, "OVERLAY")
-    checkmark:SetSize(14, 14)
-    checkmark:SetPoint("TOPRIGHT", itemButton, "BOTTOMRIGHT", 7, 7)
-    checkmark:SetAtlas("common-icon-checkmark")
-
-
+    local checkmark = Utils:AddCheckmarkTexture(itemButton)
     local done = C_QuestLog.IsQuestFlaggedCompleted(Constants.DELVERS_BOUNTY_QUEST_ID)
-    C_QuestLog.IsQuestFlaggedCompleted(86371)
+
     if done then
         checkmark:Show()
     else
         checkmark:Hide()
     end
+    
+    Utils:AddIconText(itemButton, tostring(C_Item.GetItemCount(Constants.DELVERS_BOUNTY_MAP)))
 
-    local message = "You have " .. (done and "" or "not ") .. "recieved your delvers bounty map this week."
-    addTooltipToButton(itemButton, "Delvers Bounty", message)
+    local message = "You " .. (done and Utils:TextUncommon("have") or Utils:TextRed("have not")) .. " received your delvers bounty map this week."
+    message = message .. "\n\n" .. Utils:TextYellow("Total: ") .. C_Item.GetItemCount(Constants.DELVERS_BOUNTY_MAP)
+    Utils:AddTooltipToButton(itemButton, Utils:TextEpic("Delvers Bounty"), message)
 end
 
 ---
 --- Add Button for the Wave Scrambler 2000
 ---
-local function scramblerButton()
-    local itemCount = C_Item.GetItemCount(Constants.WAVE_SCRAMBLER_2000)
-    local itemButton = CreateFrame(
-            "Button",
-            addonName .. "ScramblerButton",
-            DelvesDashboardFrame,
-            "SecureActionButtonTemplate"
+local function ScramblerButton()
+    local itemButton, _ = Utils:CreateItemButton(
+        "WaveScramblerButton",
+        Constants.WAVE_SCRAMBLER_2000,
+        80,
+        function ()
+            return C_Item.GetItemCount(Constants.WAVE_SCRAMBLER_2000) == 0
+        end
     )
-    itemButton:SetAttribute("type", "item")
-    itemButton:SetAttribute("item", Constants.WAVE_SCRAMBLER_2000)
-    itemButton:SetSize(Constants.BUTTON_SIZE, Constants.BUTTON_SIZE)
-    itemButton:SetPoint("BOTTOMRIGHT", Constants.BUTTON_X_AXIS_OFFSET, 75)
-
-    local icon = itemButton:CreateTexture(nil, "BACKGROUND")
-    icon:SetAllPoints()
-    icon:SetTexture(C_Item.GetItemIconByID(Constants.WAVE_SCRAMBLER_2000))
-
-    if itemCount == 0 then
-        icon:SetDesaturated(true)
-        itemButton:Disable()
-    else
-        icon:SetDesaturated(false)
-    end
-
-    addTooltipToButton(itemButton, "Wave Scrambler 2000", "Use this to summon the Underpin in a bountiful delve to guarantee a delver's bounty.")
+    local message = "Use this to summon the Underpin in a bountiful delve to guarantee a delver's bounty."
+    message = message .. "\n\n" .. Utils:TextYellow("Total: ") .. C_Item.GetItemCount(Constants.WAVE_SCRAMBLER_2000)
+    Utils:AddTooltipToButton(itemButton, Utils:TextRare("Wave Scrambler 2000"), message)
 end
 
 
 ---
 --- Add Button for the Delve-O-Bot toy
 ---
-local function delveBotButton()
-    local _, _, iconTexture = C_ToyBox.GetToyInfo(Constants.DELVE_O_BOT_7001)
-
-    if not PlayerHasToy(Constants.DELVE_O_BOT_7001) then
-        return
-    end
-
-    local itemButton = CreateFrame(
-            "Button",
-            addonName .. "DelveBotButton",
-            DelvesDashboardFrame,
-            "SecureActionButtonTemplate"
+local function DelveBotButton()
+    local itemButton, _ = Utils:CreateToyButton(
+        "DelveBotButton",
+        Constants.DELVE_O_BOT_7001,
+        130
     )
-    itemButton:SetAttribute("type", "toy")
-    itemButton:SetAttribute("toy", Constants.DELVE_O_BOT_7001)
-    itemButton:SetSize(Constants.BUTTON_SIZE, Constants.BUTTON_SIZE)
-    itemButton:SetPoint("BOTTOMRIGHT", Constants.BUTTON_X_AXIS_OFFSET, 120)
-
-    local icon = itemButton:CreateTexture(nil, "BACKGROUND")
-    icon:SetAllPoints()
-    icon:SetTexture(iconTexture)
-
-    itemButton:RegisterForClicks("AnyUp")
-
-    local cooldown = CreateFrame("Cooldown", nil, itemButton, "CooldownFrameTemplate")
-    cooldown:SetAllPoints()
-    local start, duration = C_Container.GetItemCooldown(Constants.DELVE_O_BOT_7001)
-    cooldown:SetCooldown(start, duration)
-
-    addTooltipToButton(itemButton, "Delve-O-Bot 7001", "Fly to the next bountiful delve.")
+    Utils:AddTooltipToButton(itemButton, Utils:TextRare("Delve-O-Bot 7001"), "Fly to the next bountiful delve.")
 end
 
 
 ---
 --- Display the number of coffer keys available.
 ---
-local function cofferKeysDisplay()
+local function CofferKeysDisplay()
     local cofferKeysInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.COFFER_KEY)
 
     if not cofferKeysInfo then return end
@@ -221,11 +103,9 @@ local function cofferKeysDisplay()
     keysTex:SetAllPoints()
     keysTex:SetTexture(cofferKeysInfo.iconFileID)
 
-    local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    text:SetText(tostring(count))
+    local text = Utils:AddIconText(item, count)
+    text:SetAllPoints()
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
-    text:SetJustifyH("RIGHT")
-    text:SetTextColor(1, 1, 1, 1)
 
     item:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 
@@ -236,6 +116,14 @@ local function cofferKeysDisplay()
         text:SetText(tostring(quantity))
     end)
 
+    local keysEarnedFromChestsThisWeek = Utils:GetKeysEarnedFromChestsThisWeek()
+
+    Utils:SetTooltipForFrame(
+        item,
+        Utils:TextEpic("Restored Coffer Keys"),
+        "You've earned " .. Utils:TextUncommon(keysEarnedFromChestsThisWeek) .. " out of " .. Utils:TextUncommon("4") .. " keys from chests this week."
+    )
+
     return item
 end
 
@@ -243,7 +131,7 @@ end
 ---
 --- Display undercoins
 ---
-local function undercoinDisplay()
+local function UndercoinDisplay()
     local undercoinInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.UNDERCOIN)
 
     if not undercoinInfo then return end
@@ -269,11 +157,9 @@ local function undercoinDisplay()
     keysTex:SetAllPoints()
     keysTex:SetTexture(undercoinInfo.iconFileID)
 
-    local text = item:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    text:SetText(tostring(count))
+    local text = Utils:AddIconText(item, count)
+    text:SetAllPoints()
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
-    text:SetJustifyH("RIGHT")
-    text:SetTextColor(1, 1, 1, 1)
 
     item:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 
@@ -287,24 +173,70 @@ local function undercoinDisplay()
     return item
 end
 
+---
+--- Display coffer key shards
+---
+local function CofferKeyShardsDisplay()
+    local cofferKeyShards = C_Item.GetItemCount(Constants.COFFER_KEY_SHARDS)
+    local itemButton, _ = Utils:CreateItemButton(
+        "CofferKeyShard",
+        Constants.COFFER_KEY_SHARD_S2_ITEM,
+        180,
+        function ()
+            return cofferKeyShards < 100
+        end,
+        false
+    )
+
+    if cofferKeyShards >= 100 then
+        Utils:AddBorder(itemButton)
+    end
+
+    local text = Utils:AddIconText(itemButton, cofferKeyShards)
+
+    local numKeys = math.floor(cofferKeyShards / 100)
+    local keysText = ""
+    if numKeys > 0 then
+        keysText = Utils:TextRed(numKeys)
+    else
+        keysText = Utils:TextUncommon(numKeys)
+    end
+
+    local message = "You have enough shards to create " .. keysText .. " Coffer Keys."
+    message = message .. "\n\n" .. Utils:TextYellow("Total: ") .. cofferKeyShards
+
+    Utils:AddTooltipToButton(itemButton, Utils:TextRare("Coffer Key Shards"), message)
+
+    itemButton:RegisterEvent("BAG_UPDATE")
+
+    itemButton:SetScript("OnEvent", function (_)
+        local cofferKeyShards = C_Item.GetItemCount(Constants.COFFER_KEY_SHARDS)
+        text:SetText(tostring(cofferKeyShards))
+    end)
+
+    return itemButton
+end
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 
-f:SetScript("OnEvent", function(_, _, addon)
-    if addon == "Blizzard_DelvesDashboardUI" then
+f:SetScript("OnEvent", function(_, _, loadedAddon)
+    if loadedAddon == "Blizzard_DelvesDashboardUI" then
         if DelvesDashboardFrame then
-            delveBotButton()
-            scramblerButton()
-            delversBountyButton()
-            cofferKeysDisplay()
+            DelveBotButton()
+            ScramblerButton()
+            DelversBountyButton()
+            CofferKeyShardsDisplay()
 
             local row = CreateFrame("Frame", nil, DelvesDashboardFrame)
-            row:SetSize(110, 30)
-            row:SetPoint("BOTTOMRIGHT", -75, 2)
+            row:SetSize(120, 30)
+            row:SetPoint("BOTTOMRIGHT", -65, 2)
 
-            local frames = {cofferKeysDisplay(), undercoinDisplay()}
-            layoutHorizontally(frames, row, 5)
+            local frames = {
+                CofferKeysDisplay(),
+                UndercoinDisplay()
+            }
+            Utils:LayoutHorizontally(frames, row, 5)
         end
     end
 end)

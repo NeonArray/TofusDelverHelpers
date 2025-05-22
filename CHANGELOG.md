@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.3.0] - 2025-05-22
+
+- Feature: Add Coffer Key Shard tracking and button
+
 ## [1.2.5] - 2025-05-18
 
 - Update: Replace deprecated globals with correct API equivalents
