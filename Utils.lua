@@ -187,10 +187,14 @@ end
 ---@param sizeX number
 ---@param sizeY number
 function TofusUtils:AddBorder(frame, color, sizeX, sizeY)
+    if type(frame) ~= "table" then
+        return
+    end
+
     local border = frame:CreateTexture(nil, "OVERLAY")
     border:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
     border:SetBlendMode("ADD")
-    border:SetSize(sizeX or Constants.BUTTON_SIZE, sizeY or Constants.BUTTON_SIZE)
+    border:SetSize(sizeX or addon.Constants.BUTTON_SIZE, sizeY or addon.Constants.BUTTON_SIZE)
     border:SetPoint("CENTER", frame, "CENTER", 0, 0)
     if color then
         border:SetVertexColor(color.r, color.g, color.b)
