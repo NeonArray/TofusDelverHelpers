@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.4.1] - 2025-08-13
+
+- Fix: Game Version Update
+
 ## [1.4.0] - 2025-08-13
 
 - Update: Season 3 Items

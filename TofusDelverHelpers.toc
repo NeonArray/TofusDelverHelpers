@@ -1,4 +1,4 @@
-## Interface: 110105
+## Interface: 110200
 ## Version: @project-version@
 ## Title: Tofu's Delver Helpers
 ## Notes: This addon displays some helpful information as well as shortcuts to delve related items/toys.
