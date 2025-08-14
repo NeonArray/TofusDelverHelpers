@@ -1,12 +1,12 @@
 local addonName, addon = ...
 local Constants = {
-    DELVERS_BOUNTY_MAP = 233071,
-    WAVE_SCRAMBLER_2000 = 233186,
+    DELVERS_BOUNTY_MAP = 248142,
+    DELVE_BOSS_SUMMON_ITEM = 248017,
     DELVE_O_BOT_7001 = 230850,
     COFFER_KEY = 3028,
     UNDERCOIN = 2803,
-    COFFER_KEY_SHARDS = 236096,
-    COFFER_KEY_SHARD_S2_ITEM = 236096,
+    COFFER_KEY_SHARDS = 245653,
+    COFFER_KEY_SHARD_S3_ITEM = 245653,
 
     DELVERS_BOUNTY_QUEST_ID = 86371,
 
@@ -45,20 +45,20 @@ local function DelversBountyButton()
 end
 
 ---
---- Add Button for the Wave Scrambler 2000
+--- Add Button for the Shrieking Quartz
 ---
-local function ScramblerButton()
+local function BossSummonButton()
     local itemButton, _ = Utils:CreateItemButton(
-        "WaveScramblerButton",
-        Constants.WAVE_SCRAMBLER_2000,
+        "BossSummonButton",
+        Constants.DELVE_BOSS_SUMMON_ITEM,
         80,
         function ()
-            return C_Item.GetItemCount(Constants.WAVE_SCRAMBLER_2000) == 0
+            return C_Item.GetItemCount(Constants.DELVE_BOSS_SUMMON_ITEM) == 0
         end
     )
-    local message = "Use this to summon the Underpin in a bountiful delve to guarantee a delver's bounty."
-    message = message .. "\n\n" .. Utils:TextYellow("Total: ") .. C_Item.GetItemCount(Constants.WAVE_SCRAMBLER_2000)
-    Utils:AddTooltipToButton(itemButton, Utils:TextRare("Wave Scrambler 2000"), message)
+    local message = "Use this to summon Ky'veza in a bountiful delve to guarantee a delver's bounty."
+    message = message .. "\n\n" .. Utils:TextYellow("Total: ") .. C_Item.GetItemCount(Constants.DELVE_BOSS_SUMMON_ITEM)
+    Utils:AddTooltipToButton(itemButton, Utils:TextRare("Shrieking Quartz"), message)
 end
 
 
@@ -180,7 +180,7 @@ local function CofferKeyShardsDisplay()
     local cofferKeyShards = C_Item.GetItemCount(Constants.COFFER_KEY_SHARDS)
     local itemButton, _ = Utils:CreateItemButton(
         "CofferKeyShard",
-        Constants.COFFER_KEY_SHARD_S2_ITEM,
+        Constants.COFFER_KEY_SHARD_S3_ITEM,
         180,
         function ()
             return cofferKeyShards < 100
@@ -224,7 +224,7 @@ f:SetScript("OnEvent", function(_, _, loadedAddon)
     if loadedAddon == "Blizzard_DelvesDashboardUI" then
         if DelvesDashboardFrame then
             DelveBotButton()
-            ScramblerButton()
+            BossSummonButton()
             DelversBountyButton()
             CofferKeyShardsDisplay()
 

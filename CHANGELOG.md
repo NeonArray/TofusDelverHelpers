@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.4.0] - 2025-08-13
+
+- Update: Season 3 Items
+  
 ## [1.3.1] - 2025-06-14
 
 - Fix: Update Constants usage namespace

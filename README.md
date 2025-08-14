@@ -7,8 +7,8 @@ Here is a summary of what you can find:
 Buttons:
 
 *   [Delve-O-Matic 7001](https://www.wowhead.com/item=230850/delve-o-bot-7001)
-*   [Wave Scrambler 2000](https://www.wowhead.com/item=233186/wave-scrambler-2000)
-*   [Delvers Bounty](https://www.wowhead.com/item=233071/delvers-bounty)
+*   [Shrieking Quartz](https://www.wowhead.com/item=248017/shrieking-quartz)
+*   [Delvers Bounty](https://www.wowhead.com/item=248142/delvers-bounty)
 
 Currency:
 
