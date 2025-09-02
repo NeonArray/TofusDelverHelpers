@@ -157,7 +157,11 @@ local function UndercoinDisplay()
     keysTex:SetAllPoints()
     keysTex:SetTexture(undercoinInfo.iconFileID)
 
-    local text = Utils:AddIconText(item, count)
+    local countStr = tostring(count)
+    if count > 9999 then
+        countStr = string.format("%.1fK", count / 1000)
+    end
+    local text = Utils:AddIconText(item, countStr)
     text:SetAllPoints()
     text:SetPoint("RIGHT", keysIcon, "LEFT", -5, 0)
 

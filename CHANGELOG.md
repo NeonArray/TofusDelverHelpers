@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.5.0] - 2025-09-02
+
+- Update: Truncate Undercoin display
+
 ## [1.4.1] - 2025-08-13
 
 - Fix: Game Version Update
